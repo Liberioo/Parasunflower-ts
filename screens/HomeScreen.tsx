@@ -30,6 +30,10 @@ const HomeScreen: React.FC<HomeProps> = () => {
           onPress={() => navigation.navigate("Mapa")}
           title="Normal Flow"
         />
+        <Button
+          onPress={() => navigation.navigate("Bluetooth")}
+          title="Bluetooth"
+        />
       </View>
     </View>
   );
