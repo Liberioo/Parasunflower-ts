@@ -6,23 +6,30 @@ import { formatPricePerMinute } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import useBLE from "@/useBLE";
 
 interface TimeOptionsProps {}
 
 const TimeOptions: React.FC<TimeOptionsProps> = () => {
+  const { connectedDevice } = useBLE();
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const store = useStore();
   const pricePerMin = store.rate;
 
-  const goToChargingOptions = () => {
-    navigation.navigate("PIX Request");
+  const goToNextPage = () => {
+    if (connectedDevice && connectedDevice.name?.includes("Name")) {
+      //TODO: colocar o nome Parasunflower-{id} no nome para checagem
+      navigation.navigate("PIX Request");
+    } else {
+      navigation.navigate("Bluetooth");
+    }
   };
 
   const handleTimePress = (minutes: number) => {
     store.setTime(minutes);
     store.setPrice(minutes * pricePerMin);
-    goToChargingOptions();
+    goToNextPage();
   };
 
   return (

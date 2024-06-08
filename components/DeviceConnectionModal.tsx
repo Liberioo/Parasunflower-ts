@@ -7,42 +7,47 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { Device } from "react-native-ble-plx";
+import Button from "./Button";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackNavigatorParamsList } from "@/app";
+import useStore from "@/store";
 
 type DeviceModalListItemProps = {
   item: ListRenderItemInfo<Device>;
   connectToPeripheral: (device: Device) => void;
-  closeModal: () => void;
 };
 
 type DeviceModalProps = {
   devices: Device[];
-  visible: boolean;
   connectToPeripheral: (device: Device) => void;
-  closeModal: () => void;
 };
 
 const DeviceModalListItem: FC<DeviceModalListItemProps> = (props) => {
-  const { item, connectToPeripheral, closeModal } = props;
+  const navigation =
+    useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
+  const store = useStore();
+  const { item, connectToPeripheral } = props;
 
   const connectAndCloseModal = useCallback(() => {
     connectToPeripheral(item.item);
-    closeModal();
-  }, [closeModal, connectToPeripheral, item.item]);
+    if (store.isRunning) {
+      navigation.navigate("Tempo restante e controles");
+    } else if (store.returnToPaymentResponse) {
+      navigation.navigate("PIX Response");
+    } else {
+      navigation.navigate("PIX Request");
+    }
+  }, [connectToPeripheral, item.item]);
 
-  return (
-    <TouchableOpacity
-      onPress={connectAndCloseModal}
-      style={modalStyle.ctaButton}
-    >
-      <Text style={modalStyle.ctaButtonText}>{item.item.name}</Text>
-    </TouchableOpacity>
-  );
+  return <Button onPress={connectAndCloseModal} title={item.item.name} />;
 };
 
 const DeviceModal: FC<DeviceModalProps> = (props) => {
-  const { devices, visible, connectToPeripheral, closeModal } = props;
+  const { devices, connectToPeripheral } = props;
 
   const renderDeviceModalListItem = useCallback(
     (item: ListRenderItemInfo<Device>) => {
@@ -50,21 +55,15 @@ const DeviceModal: FC<DeviceModalProps> = (props) => {
         <DeviceModalListItem
           item={item}
           connectToPeripheral={connectToPeripheral}
-          closeModal={closeModal}
         />
       );
     },
-    [closeModal, connectToPeripheral]
+    [connectToPeripheral]
   );
 
   return (
-    <Modal
-      style={modalStyle.modalContainer}
-      animationType="slide"
-      transparent={false}
-      visible={visible}
-    >
-      <SafeAreaView style={modalStyle.modalTitle}>
+    <View style={modalStyle.modalContainer}>
+      <View style={modalStyle.modalTitle}>
         <Text style={modalStyle.modalTitleText}>
           Tap on a device to connect
         </Text>
@@ -73,8 +72,8 @@ const DeviceModal: FC<DeviceModalProps> = (props) => {
           data={devices}
           renderItem={renderDeviceModalListItem}
         />
-      </SafeAreaView>
-    </Modal>
+      </View>
+    </View>
   );
 };
 
@@ -107,7 +106,7 @@ const modalStyle = StyleSheet.create({
     textAlign: "center",
   },
   ctaButton: {
-    backgroundColor: "#FF6060",
+    backgroundColor: "yellow",
     justifyContent: "center",
     alignItems: "center",
     height: 50,

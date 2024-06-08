@@ -7,11 +7,13 @@ import * as React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import useBLE from "@/useBLE";
 
 export default function PIXResponse() {
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const store = useStore();
+  const { connectedDevice, send } = useBLE();
 
   React.useEffect(() => {
     const getPaymentResponse = async () => {
@@ -24,6 +26,13 @@ export default function PIXResponse() {
         if (json.payment_status === "approved") {
           console.log(new Date(json.expiration_date));
           store.setEndTime(new Date(json.expiration_date));
+          if (!connectedDevice || !connectedDevice.name?.includes("name")) {
+            store.setReturnToPaymentResponse(true);
+            navigation.navigate("Bluetooth");
+          } else {
+            store.setIsRunning(true);
+            send(connectedDevice, json.expiration_date);
+          }
           handlePress();
         } else if (json.payment_status === "cancelled") {
           navigation.navigate("PIX Request");

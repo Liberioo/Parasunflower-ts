@@ -55,9 +55,6 @@ const QRCodeReader: React.FC<QRCodeReaderProps> = () => {
             style={styles.camera}
           />
         </View>
-        <View>
-          <Button title="Pular Leitura" onPress={goToTimeOptions} />
-        </View>
       </>
     );
   };

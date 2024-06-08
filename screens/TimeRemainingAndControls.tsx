@@ -6,12 +6,14 @@ import useStore from "../store";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import useBLE from "@/useBLE";
 
 interface TimeRemainingAndControlsProps {}
 
 const TimeRemainingAndControls: React.FC<
   TimeRemainingAndControlsProps
 > = () => {
+  const { connectedDevice, disconnectFromDevice, send } = useBLE();
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const [option, setOption] = useState(0); // 0 - auto, 1 - manual
@@ -21,24 +23,40 @@ const TimeRemainingAndControls: React.FC<
     store.endTime.getTime() / 1000 - new Date().getTime() / 1000
   );
 
+  const goToBluetooth = () => {
+    navigation.navigate("Bluetooth");
+  };
+
   const handleButton1Press = () => {
-    // TODO: implementar integração
-    console.log("up");
+    if (connectedDevice) {
+      send(connectedDevice, "up");
+    } else {
+      goToBluetooth();
+    }
   };
 
   const handleButton2Press = () => {
-    // TODO: implementar integração
-    console.log("left");
+    if (connectedDevice) {
+      send(connectedDevice, "ledt");
+    } else {
+      goToBluetooth();
+    }
   };
 
   const handleButton3Press = () => {
-    // TODO: implementar integração
-    console.log("right");
+    if (connectedDevice) {
+      send(connectedDevice, "right");
+    } else {
+      goToBluetooth();
+    }
   };
 
   const handleButton4Press = () => {
-    // TODO: implementar integração
-    console.log("down");
+    if (connectedDevice) {
+      send(connectedDevice, "down");
+    } else {
+      goToBluetooth();
+    }
   };
 
   const handleResetPress = () => {
@@ -49,7 +67,13 @@ const TimeRemainingAndControls: React.FC<
   };
 
   const handleSwitchPress = () => {
-    setOption(option === 1 ? 0 : 1);
+    if (connectedDevice) {
+      setOption(option === 1 ? 0 : 1);
+      send(connectedDevice, option === 1 ? "auto" : "manual");
+    } else {
+      setOption(option === 1 ? 0 : 1);
+      goToBluetooth();
+    }
   };
 
   const handleAddTimePress = () => {

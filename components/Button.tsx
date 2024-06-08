@@ -10,7 +10,7 @@ import { NavigationProp } from "@react-navigation/native";
 
 interface ButtonProps {
   onPress?: () => void;
-  title: string;
+  title: string | null;
   style?: ViewStyle;
 }
 
