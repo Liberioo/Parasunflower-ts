@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import Button from "../components/Button";
 import CountdownTimer from "../components/CountdownTimer";
@@ -13,49 +13,81 @@ interface TimeRemainingAndControlsProps {}
 const TimeRemainingAndControls: React.FC<
   TimeRemainingAndControlsProps
 > = () => {
-  const { connectedDevice, disconnectFromDevice, send } = useBLE();
+  const {
+    requestPermissions,
+    scanForPeripherals,
+    allDevices,
+    connectToDevice,
+    connectedDevice,
+    disconnectFromDevice,
+    send,
+  } = useBLE();
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const [option, setOption] = useState(0); // 0 - auto, 1 - manual
+  const [flag, setFLag] = useState<boolean>(false);
+  const [change, setChange] = useState<number>(0);
+
+  useEffect(() => {
+    const scanForDevices = async () => {
+      const isPermissionsEnabled = await requestPermissions();
+      if (isPermissionsEnabled) {
+        scanForPeripherals();
+      }
+    };
+    if (
+      !connectedDevice ||
+      (!connectedDevice.name?.includes("Parasunflower") && !flag)
+    ) {
+      setFLag(false);
+      scanForDevices();
+      allDevices.forEach((device) => {
+        if (device.name?.includes("Parasunflower")) {
+          connectToDevice(device);
+          setFLag(true);
+        }
+      });
+    }
+  }, [change]);
 
   const store = useStore();
   const seconds = Math.floor(
     store.endTime.getTime() / 1000 - new Date().getTime() / 1000
   );
 
-  const goToBluetooth = () => {
-    navigation.navigate("Bluetooth");
-  };
-
   const handleButton1Press = () => {
-    if (connectedDevice) {
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "up");
     } else {
-      goToBluetooth();
+      setFLag(false);
+      setChange(change + 1);
     }
   };
 
   const handleButton2Press = () => {
-    if (connectedDevice) {
-      send(connectedDevice, "ledt");
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
+      send(connectedDevice, "left");
     } else {
-      goToBluetooth();
+      setFLag(false);
+      setChange(change + 1);
     }
   };
 
   const handleButton3Press = () => {
-    if (connectedDevice) {
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "right");
     } else {
-      goToBluetooth();
+      setFLag(false);
+      setChange(change + 1);
     }
   };
 
   const handleButton4Press = () => {
-    if (connectedDevice) {
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "down");
     } else {
-      goToBluetooth();
+      setFLag(false);
+      setChange(change + 1);
     }
   };
 
@@ -71,8 +103,8 @@ const TimeRemainingAndControls: React.FC<
       setOption(option === 1 ? 0 : 1);
       send(connectedDevice, option === 1 ? "auto" : "manual");
     } else {
-      setOption(option === 1 ? 0 : 1);
-      goToBluetooth();
+      setFLag(false);
+      setChange(change + 1);
     }
   };
 
@@ -86,6 +118,14 @@ const TimeRemainingAndControls: React.FC<
     }
   };
 
+  const connectionText = () => {
+    if (flag) {
+      return <></>;
+    } else {
+      return <Text>O bluetooth do Parasunflower está desconectado</Text>;
+    }
+  };
+
   const renderMenu = () => {
     if (option === 1) {
       return (
@@ -95,6 +135,7 @@ const TimeRemainingAndControls: React.FC<
             initialSeconds={seconds}
             onChange={handleEndTime}
           />
+          {connectionText()}
           <View>
             <Button onPress={handleButton1Press} title="Inclinar para cima" />
           </View>
@@ -127,6 +168,7 @@ const TimeRemainingAndControls: React.FC<
             initialSeconds={seconds}
             onChange={handleEndTime}
           />
+          {connectionText()}
           <View>
             <Text style={styles.title}>
               Parasunflower está no modo automático
@@ -148,7 +190,19 @@ const TimeRemainingAndControls: React.FC<
       {renderMenu()}
       <View style={styles.container}>
         <Button onPress={handleAddTimePress} title={"Adicione mais tempo"} />
-        <Button onPress={handleResetPress} title={"Reset"} />
+        <Button
+          onPress={
+            flag
+              ? () => {
+                  disconnectFromDevice();
+                  setFLag(false);
+                }
+              : () => {
+                  setChange(change + 1);
+                }
+          }
+          title={flag ? "Desconectar Bluetooth" : "Conectar Bluetooth"}
+        />
       </View>
     </View>
   );

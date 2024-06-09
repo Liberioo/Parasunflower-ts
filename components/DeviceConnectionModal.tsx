@@ -18,12 +18,12 @@ import useStore from "@/store";
 
 type DeviceModalListItemProps = {
   item: ListRenderItemInfo<Device>;
-  connectToPeripheral: (device: Device) => void;
+  connectToPeripheral: (device: Device, message: string) => void;
 };
 
 type DeviceModalProps = {
   devices: Device[];
-  connectToPeripheral: (device: Device) => void;
+  connectToPeripheral: (device: Device, message: string) => void;
 };
 
 const DeviceModalListItem: FC<DeviceModalListItemProps> = (props) => {
@@ -33,14 +33,7 @@ const DeviceModalListItem: FC<DeviceModalListItemProps> = (props) => {
   const { item, connectToPeripheral } = props;
 
   const connectAndCloseModal = useCallback(() => {
-    connectToPeripheral(item.item);
-    if (store.isRunning) {
-      navigation.navigate("Tempo restante e controles");
-    } else if (store.returnToPaymentResponse) {
-      navigation.navigate("PIX Response");
-    } else {
-      navigation.navigate("PIX Request");
-    }
+    connectToPeripheral(item.item, "connect");
   }, [connectToPeripheral, item.item]);
 
   return <Button onPress={connectAndCloseModal} title={item.item.name} />;

@@ -8,31 +8,64 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
 import useBLE from "@/useBLE";
+import { useState } from "react";
+import { Device } from "react-native-ble-plx";
 
 export default function PIXResponse() {
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const store = useStore();
-  const { connectedDevice, send } = useBLE();
+  const {
+    requestPermissions,
+    scanForPeripherals,
+    allDevices,
+    connectToDevice,
+    connectedDevice,
+    disconnectFromDevice,
+    send,
+  } = useBLE();
+  const [flag, setFLag] = useState<boolean>(false);
+  const [change, setChange] = useState<number>(0);
+
+  const scanForDevices = React.useCallback(async () => {
+    const isPermissionsEnabled = await requestPermissions();
+    if (isPermissionsEnabled) {
+      scanForPeripherals();
+    }
+  }, []);
+
+  const connectBluetooth = React.useCallback(() => {
+    if (
+      !connectedDevice ||
+      (!connectedDevice.name?.includes("Parasunflower") && !flag)
+    ) {
+      setFLag(false);
+      scanForDevices();
+      allDevices.forEach((device) => {
+        if (device.name?.includes("Parasunflower")) {
+          connectToDevice(device);
+          setFLag(true);
+        }
+      });
+    }
+  }, [change]);
 
   React.useEffect(() => {
     const getPaymentResponse = async () => {
       try {
-        console.log(store.rentalid);
+        // console.log(store.rentalid);
         const response = await fetch(
-          `http://parasunflower.duckdns.org/api/check_payment/${store.rentalid}`
+          `http://18.191.166.173/api/check_payment/${store.rentalid}`
         );
         const json = await response.json();
         if (json.payment_status === "approved") {
-          console.log(new Date(json.expiration_date));
+          console.log(json.expiration_date);
           store.setEndTime(new Date(json.expiration_date));
-          if (!connectedDevice || !connectedDevice.name?.includes("name")) {
-            store.setReturnToPaymentResponse(true);
-            navigation.navigate("Bluetooth");
-          } else {
-            store.setIsRunning(true);
-            send(connectedDevice, json.expiration_date);
-          }
+          // console.log(connectedDevice?.id);
+          // if (connectedDevice) {
+          //   send(connectedDevice, json.expiration_date);
+          //   handlePress();
+          // }
           handlePress();
         } else if (json.payment_status === "cancelled") {
           navigation.navigate("PIX Request");
@@ -57,6 +90,7 @@ export default function PIXResponse() {
   };
 
   const handleEndTime = (newSeconds: number) => {
+    setChange(change + 1);
     if (newSeconds === 0) {
       navigation.navigate("PIX Request");
     }

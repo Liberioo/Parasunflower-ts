@@ -18,12 +18,13 @@ const TimeOptions: React.FC<TimeOptionsProps> = () => {
   const pricePerMin = store.rate;
 
   const goToNextPage = () => {
-    if (connectedDevice && connectedDevice.name?.includes("Name")) {
-      //TODO: colocar o nome Parasunflower-{id} no nome para checagem
-      navigation.navigate("PIX Request");
-    } else {
-      navigation.navigate("Bluetooth");
-    }
+    navigation.navigate("PIX Request");
+    // if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
+    //   //TODO: colocar o nome Parasunflower-{id} no nome para checagem
+    //   navigation.navigate("PIX Request");
+    // } else {
+    //   navigation.navigate("Bluetooth");
+    // }
   };
 
   const handleTimePress = (minutes: number) => {

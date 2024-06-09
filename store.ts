@@ -1,4 +1,3 @@
-import { Float } from "react-native/Libraries/Types/CodegenTypes";
 import { create } from "zustand";
 
 interface AppState {
@@ -11,7 +10,7 @@ interface AppState {
   endTime: Date;
   isRunning: boolean;
   returnToPaymentResponse: boolean;
-  setReturnToPaymentResponse: (isReturn: boolean) => void;
+  setReturnToPaymentResponse: (returnToPaymentResponse: boolean) => void;
   setIsRunning: (isRunning: boolean) => void;
   setEndTime: (time: Date) => void;
   setRentalid: (id: any) => void;
@@ -32,12 +31,13 @@ const useStore = create<AppState>((set) => ({
   QRCodeData: "",
   pixCode: "",
   rentalid: null,
-  endTime: new Date(),
+  //   endTime: new Date(),
+  endTime: new Date("2024-06-09T03:30:00.000000"),
   isRunning: false,
   returnToPaymentResponse: false,
-  setReturnToPaymentResponse: (isReturn) =>
-    set({ returnToPaymentResponse: isReturn }),
-  setIsRunning: (flag) => set({ isRunning: flag }),
+  setReturnToPaymentResponse: (returnToPaymentResponse) =>
+    set({ returnToPaymentResponse: returnToPaymentResponse }),
+  setIsRunning: (isRunning) => set({ isRunning: isRunning }),
   setEndTime: (time) => set({ endTime: time }),
   setRentalid: (id) => set({ rentalid: id }),
   setPixCode: (code) => set({ pixCode: code }),

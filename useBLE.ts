@@ -95,7 +95,7 @@ function useBLE(): BluetoothLowEnergyApi {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes("name")) {
+      if (device && device.name?.includes("Parasunflower")) {
         setAllDevices((prevState) => {
           if (!isDuplicateDevice(prevState, device)) {
             return [...prevState, device];
@@ -115,6 +115,7 @@ function useBLE(): BluetoothLowEnergyApi {
     } catch (e) {
       console.log("ERRO NA CONEXÃO", e);
     }
+    send(device, "rent");
   };
 
   const disconnectFromDevice = () => {
