@@ -6,18 +6,29 @@ import {
   ViewStyle,
   TextStyle,
 } from "react-native";
-import { NavigationProp } from "@react-navigation/native";
 
 interface ButtonProps {
   onPress?: () => void;
   title: string | null;
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ onPress, title, style }) => {
+const Button: React.FC<ButtonProps> = ({
+  onPress,
+  title,
+  style,
+  disabled = false,
+}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-      <Text style={styles.buttonText}>{title}</Text>
+    <TouchableOpacity
+      onPress={disabled ? undefined : onPress}
+      style={[styles.button, style, disabled && styles.disabledButton]}
+      disabled={disabled}
+    >
+      <Text style={[styles.buttonText, disabled && styles.disabledButtonText]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -32,10 +43,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: 10,
   } as ViewStyle,
+  disabledButton: {
+    backgroundColor: "gray",
+  } as ViewStyle,
   buttonText: {
     color: "black",
     fontSize: 16,
     fontWeight: "bold",
+  } as TextStyle,
+  disabledButtonText: {
+    color: "lightgray",
   } as TextStyle,
 });
 

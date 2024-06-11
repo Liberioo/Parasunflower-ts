@@ -25,30 +25,30 @@ const TimeRemainingAndControls: React.FC<
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const [option, setOption] = useState(0); // 0 - auto, 1 - manual
-  const [flag, setFLag] = useState<boolean>(false);
+  const [isRent, setIsRent] = useState<boolean>(false);
   const [change, setChange] = useState<number>(0);
 
-  useEffect(() => {
-    const scanForDevices = async () => {
-      const isPermissionsEnabled = await requestPermissions();
-      if (isPermissionsEnabled) {
-        scanForPeripherals();
-      }
-    };
-    if (
-      !connectedDevice ||
-      (!connectedDevice.name?.includes("Parasunflower") && !flag)
-    ) {
-      setFLag(false);
-      scanForDevices();
-      allDevices.forEach((device) => {
-        if (device.name?.includes("Parasunflower")) {
-          connectToDevice(device);
-          setFLag(true);
-        }
-      });
-    }
-  }, [change]);
+  // useEffect(() => {
+  //   const scanForDevices = async () => {
+  //     const isPermissionsEnabled = await requestPermissions();
+  //     if (isPermissionsEnabled) {
+  //       scanForPeripherals();
+  //     }
+  //   };
+  //   if (
+  //     !connectedDevice ||
+  //     (!connectedDevice.name?.includes("Parasunflower") && !flag)
+  //   ) {
+  //     setFLag(false);
+  //     scanForDevices();
+  //     allDevices.forEach((device) => {
+  //       if (device.name?.includes("Parasunflower")) {
+  //         connectToDevice(device, ["rent", store.endTime.toDateString()]);
+  //         setFLag(true);
+  //       }
+  //     });
+  //   }
+  // }, [change]);
 
   const store = useStore();
   const seconds = Math.floor(
@@ -59,8 +59,7 @@ const TimeRemainingAndControls: React.FC<
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "up");
     } else {
-      setFLag(false);
-      setChange(change + 1);
+      connection(["up"]);
     }
   };
 
@@ -68,8 +67,7 @@ const TimeRemainingAndControls: React.FC<
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "left");
     } else {
-      setFLag(false);
-      setChange(change + 1);
+      connection(["left"]);
     }
   };
 
@@ -77,8 +75,7 @@ const TimeRemainingAndControls: React.FC<
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "right");
     } else {
-      setFLag(false);
-      setChange(change + 1);
+      connection(["rent", "right"]);
     }
   };
 
@@ -86,8 +83,7 @@ const TimeRemainingAndControls: React.FC<
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "down");
     } else {
-      setFLag(false);
-      setChange(change + 1);
+      connection(["down"]);
     }
   };
 
@@ -99,12 +95,11 @@ const TimeRemainingAndControls: React.FC<
   };
 
   const handleSwitchPress = () => {
-    if (connectedDevice) {
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       setOption(option === 1 ? 0 : 1);
       send(connectedDevice, option === 1 ? "auto" : "manual");
     } else {
-      setFLag(false);
-      setChange(change + 1);
+      connection([option === 1 ? "auto" : "manual"]);
     }
   };
 
@@ -114,16 +109,42 @@ const TimeRemainingAndControls: React.FC<
 
   const handleEndTime = (sec: number) => {
     if (sec === 0) {
+      if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
+        send(connectedDevice, "free");
+      } else {
+        connection(["free"]);
+      }
       navigation.navigate("Mapa");
+      setIsRent(false);
     }
   };
 
   const connectionText = () => {
-    if (flag) {
+    if (!connectedDevice || !connectedDevice.name?.includes("Parasunflower")) {
       return <></>;
     } else {
       return <Text>O bluetooth do Parasunflower está desconectado</Text>;
     }
+  };
+
+  const scanForDevices = async () => {
+    const isPermissionsEnabled = await requestPermissions();
+    if (isPermissionsEnabled) {
+      scanForPeripherals();
+    }
+  };
+
+  const connection = (messages?: string[]) => {
+    scanForDevices();
+    allDevices.forEach((device) => {
+      if (device.name?.includes("Parasunflower")) {
+        if (messages) {
+          connectToDevice(device, messages);
+        } else {
+          connectToDevice(device);
+        }
+      }
+    });
   };
 
   const renderMenu = () => {
@@ -137,25 +158,36 @@ const TimeRemainingAndControls: React.FC<
           />
           {connectionText()}
           <View>
-            <Button onPress={handleButton1Press} title="Inclinar para cima" />
+            <Button
+              onPress={handleButton1Press}
+              title="Inclinar para cima"
+              disabled={!isRent}
+            />
           </View>
           <View style={{ flexDirection: "row" }}>
             <Button
               style={{ flex: 1 }}
               onPress={handleButton2Press}
               title="Rot. esquerda"
+              disabled={!isRent}
             />
             <Button
               style={{ flex: 1 }}
               onPress={handleButton3Press}
               title="Rot. direita"
+              disabled={!isRent}
             />
           </View>
           <View>
-            <Button onPress={handleButton4Press} title="Inclinar para baixo" />
+            <Button
+              onPress={handleButton4Press}
+              title="Inclinar para baixo"
+              disabled={!isRent}
+            />
             <Button
               onPress={handleSwitchPress}
               title={option === 1 ? "Auto" : "Manual"}
+              disabled={!isRent}
             />
           </View>
         </View>
@@ -178,6 +210,7 @@ const TimeRemainingAndControls: React.FC<
             <Button
               onPress={handleSwitchPress}
               title={option === 1 ? "Auto" : "Manual"}
+              disabled={!isRent}
             />
           </View>
         </View>
@@ -192,16 +225,18 @@ const TimeRemainingAndControls: React.FC<
         <Button onPress={handleAddTimePress} title={"Adicione mais tempo"} />
         <Button
           onPress={
-            flag
+            connectedDevice
               ? () => {
                   disconnectFromDevice();
-                  setFLag(false);
                 }
               : () => {
-                  setChange(change + 1);
+                  connection(["rent", store.endTime.toDateString()]);
+                  setIsRent(true);
                 }
           }
-          title={flag ? "Desconectar Bluetooth" : "Conectar Bluetooth"}
+          title={
+            connectedDevice ? "Desconectar Bluetooth" : "Conectar Bluetooth"
+          }
         />
       </View>
     </View>

@@ -34,7 +34,7 @@ const App = () => {
         onPress={connectedDevice ? disconnectFromDevice : scanForDevices}
         title={connectedDevice ? "Disconnect" : "Connect"}
       />
-      <DeviceModal connectToPeripheral={connectToDevice} devices={allDevices} />
+      {/* <DeviceModal connectToPeripheral={connectToDevice} devices={allDevices} /> */}
     </SafeAreaView>
   );
 };
