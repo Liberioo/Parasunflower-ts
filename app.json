@@ -22,13 +22,16 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "key"
+          "apiKey": "AIzaSyBJi_dm9qu-1JSnFk1ZC5C7NPjdrRV8hVw"
         }
       },
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
-        "android.permission.BLUETOOTH_CONNECT"
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permissions.INTERNET",
+        "android.permissions.ACCESS_COARSE_LOCATION",
+        "android.permissions.ACCESS_FINE_LOCATION"
       ],
       "package": "com.liberio.Parasunflower"
     },

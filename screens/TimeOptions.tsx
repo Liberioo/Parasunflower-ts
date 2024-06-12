@@ -19,12 +19,6 @@ const TimeOptions: React.FC<TimeOptionsProps> = () => {
 
   const goToNextPage = () => {
     navigation.navigate("PIX Request");
-    // if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
-    //   //TODO: colocar o nome Parasunflower-{id} no nome para checagem
-    //   navigation.navigate("PIX Request");
-    // } else {
-    //   navigation.navigate("Bluetooth");
-    // }
   };
 
   const handleTimePress = (minutes: number) => {

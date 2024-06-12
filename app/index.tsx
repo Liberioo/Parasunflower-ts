@@ -29,7 +29,7 @@ const Stack = createStackNavigator<RootStackNavigatorParamsList>();
 export default function App() {
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="Mapa">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Adição de Tempo" component={AddTime} />
         <Stack.Screen name="Seleção de Tempo" component={TimeOptions} />

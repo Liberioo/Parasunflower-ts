@@ -87,13 +87,6 @@ const TimeRemainingAndControls: React.FC<
     }
   };
 
-  const handleResetPress = () => {
-    // TODO: remover
-    navigation.navigate("Home");
-    store.clearTime();
-    store.clearPrice();
-  };
-
   const handleSwitchPress = () => {
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       setOption(option === 1 ? 0 : 1);
@@ -123,7 +116,7 @@ const TimeRemainingAndControls: React.FC<
     if (!connectedDevice || !connectedDevice.name?.includes("Parasunflower")) {
       return <></>;
     } else {
-      return <Text>O bluetooth do Parasunflower está desconectado</Text>;
+      return <Text>Por favor conecte-se ao bluetooth no botão abaixo</Text>;
     }
   };
 

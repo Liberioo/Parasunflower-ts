@@ -22,7 +22,6 @@ const Mapa: React.FC<MapaProps> = () => {
   >([]);
   const latDelta = 0.0922;
   const longDelta = 0.0421;
-
   useEffect(() => {
     const getUserLocationAsync = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -38,7 +37,6 @@ const Mapa: React.FC<MapaProps> = () => {
         setLocation(JSON.stringify({ latitude, longitude }));
         setLatitude(latitude);
         setLongitude(longitude);
-
         // Center the map on the location we just fetched.
         setRegion({
           latitude,
@@ -50,11 +48,10 @@ const Mapa: React.FC<MapaProps> = () => {
         console.error(error);
       }
     };
-
     const getParasolLocationsFromApiAsync = async () => {
       try {
         const response = await fetch(
-          "http://parasunflower.duckdns.org/api/get_parasuns_positions"
+          "http://18.191.166.173/api/get_parasuns_positions"
         );
         const json = await response.json();
         setParasolLocations(
@@ -67,11 +64,9 @@ const Mapa: React.FC<MapaProps> = () => {
         console.error(error);
       }
     };
-
     getUserLocationAsync();
     getParasolLocationsFromApiAsync();
   }, []);
-
   return (
     <View style={styles.container}>
       <MapView
@@ -101,7 +96,6 @@ const Mapa: React.FC<MapaProps> = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     width: "100%",
