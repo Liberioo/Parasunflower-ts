@@ -26,7 +26,7 @@ const TimeRemainingAndControls: React.FC<
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const [option, setOption] = useState(0); // 0 - auto, 1 - manual
   const [isRent, setIsRent] = useState<boolean>(false);
-  const [change, setChange] = useState<number>(0);
+  const [flag, setFlag] = useState<boolean>(false);
 
   // useEffect(() => {
   //   const scanForDevices = async () => {
@@ -113,7 +113,7 @@ const TimeRemainingAndControls: React.FC<
   };
 
   const connectionText = () => {
-    if (!connectedDevice || !connectedDevice.name?.includes("Parasunflower")) {
+    if (isConnected()) {
       return <></>;
     } else {
       return <Text>Por favor conecte-se ao bluetooth no botão abaixo</Text>;
@@ -211,6 +211,16 @@ const TimeRemainingAndControls: React.FC<
     }
   };
 
+  const isConnected = () => {
+    if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
+      setFlag(true);
+      return true;
+    } else {
+      setFlag(false);
+      return false;
+    }
+  };
+
   return (
     <View style={styles.container}>
       {renderMenu()}
@@ -218,18 +228,15 @@ const TimeRemainingAndControls: React.FC<
         <Button onPress={handleAddTimePress} title={"Adicione mais tempo"} />
         <Button
           onPress={
-            connectedDevice
+            isConnected()
               ? () => {
                   disconnectFromDevice();
                 }
               : () => {
                   connection(["rent", store.endTime.toDateString()]);
-                  setIsRent(true);
                 }
           }
-          title={
-            connectedDevice ? "Desconectar Bluetooth" : "Conectar Bluetooth"
-          }
+          title={isConnected() ? "Desconectar Bluetooth" : "Conectar Bluetooth"}
         />
       </View>
     </View>

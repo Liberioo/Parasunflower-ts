@@ -6,19 +6,20 @@ import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import { LatLng, LeafletView } from "react-native-leaflet-view";
 
 interface MapaProps {}
 
 const Mapa: React.FC<MapaProps> = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
-  const [location, setLocation] = useState<string | null>(null);
+  const [location, setLocation] = useState<LatLng | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [mapRegion, setRegion] = useState<Region | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [parasolLocations, setParasolLocations] = useState<
-    Array<[number, number]>
+    Array<{ position: LatLng; icon: string; size: [number, number] }>
   >([]);
   const latDelta = 0.0922;
   const longDelta = 0.0421;
@@ -56,8 +57,9 @@ const Mapa: React.FC<MapaProps> = () => {
         const json = await response.json();
         setParasolLocations(
           json.map((item: { latitude: number; longitude: number }) => [
-            item.latitude,
-            item.longitude,
+            { lat: item.latitude, lng: item.longitude },
+            "⛱️",
+            [32, 32],
           ])
         );
       } catch (error) {
@@ -69,7 +71,7 @@ const Mapa: React.FC<MapaProps> = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <MapView
+      {/* <MapView
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         showsMyLocationButton={true}
@@ -85,7 +87,12 @@ const Mapa: React.FC<MapaProps> = () => {
             key={index}
           />
         ))}
-      </MapView>
+      </MapView> */}
+      <LeafletView
+        mapMarkers={parasolLocations}
+        mapCenterPosition={location}
+        ownPositionMarker={location}
+      />
       <Text style={styles.text}>
         Caso já tenha nos achado, basta ler o QR code localizado no guarda-sol!
       </Text>

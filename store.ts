@@ -31,8 +31,7 @@ const useStore = create<AppState>((set) => ({
   QRCodeData: "",
   pixCode: "",
   rentalid: null,
-  //   endTime: new Date(),
-  endTime: new Date("2024-06-09T03:30:00.000000"),
+  endTime: new Date(),
   isRunning: false,
   returnToPaymentResponse: false,
   setReturnToPaymentResponse: (returnToPaymentResponse) =>

@@ -29,6 +29,7 @@
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN",
         "android.permissions.INTERNET",
         "android.permissions.ACCESS_COARSE_LOCATION",
         "android.permissions.ACCESS_FINE_LOCATION"
@@ -42,7 +43,13 @@
     },
     "plugins": [
       "expo-router",
-      "react-native-ble-plx"
+      "react-native-ble-plx",
+      [
+      "expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
+      }]
     ],
     "experiments": {
       "typedRoutes": true
