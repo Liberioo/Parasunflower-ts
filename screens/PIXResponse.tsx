@@ -110,7 +110,6 @@ export default function PIXResponse() {
         value={store.pixCode}
       />
       <Button title={"Copiar chave PIX"} onPress={copyToClipboard} />
-      <Button title={"Skip payment"} onPress={handlePress} />
     </View>
   );
 }
