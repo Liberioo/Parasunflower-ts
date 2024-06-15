@@ -9,6 +9,7 @@ import PIXRequest from "../screens/PIXRequest";
 import PIXResponse from "../screens/PIXResponse";
 import QRCodeReader from "../screens/QRCodeReader";
 import Bluetooth from "@/screens/Bluetooth";
+import useStore from "@/store";
 // import useBLE from './useBLE';
 
 export type RootStackNavigatorParamsList = {
@@ -27,9 +28,12 @@ export type RootStackNavigatorParamsList = {
 const Stack = createStackNavigator<RootStackNavigatorParamsList>();
 
 export default function App() {
+  const store = useStore();
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="Mapa">
+      <Stack.Navigator
+        initialRouteName={store.isRent ? "Tempo restante e controles" : "Mapa"}
+      >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Adição de Tempo" component={AddTime} />
         <Stack.Screen name="Seleção de Tempo" component={TimeOptions} />

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  ToastAndroid,
+} from "react-native";
 import Button from "../components/Button";
 import CountdownTimer from "../components/CountdownTimer";
 import useStore from "../store";
@@ -7,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
 import useBLE from "@/useBLE";
+import { showTopToast } from "@/utils";
 
 interface TimeRemainingAndControlsProps {}
 
@@ -104,8 +112,15 @@ const TimeRemainingAndControls: React.FC<
   };
 
   const handleEndTime = (sec: number) => {
+    if (sec === 3000) {
+      showTopToast(
+        "Apenas 5 minutos restantes!\nLembrando que você sempre pode adicionar mais tempo!",
+        ToastAndroid.LONG
+      );
+    }
     if (sec <= 0) {
       if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
+        store.setIsRent(false);
         setOption(option === 1 ? 0 : 1);
         send(connectedDevice, "free");
         navigation.navigate("Mapa");

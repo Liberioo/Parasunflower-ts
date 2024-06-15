@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, ToastAndroid } from "react-native";
 import Button from "../components/Button";
 import CountdownTimer from "../components/CountdownTimer";
 import useStore from "../store";
@@ -10,45 +10,13 @@ import { RootStackNavigatorParamsList } from "@/app";
 import useBLE from "@/useBLE";
 import { useState } from "react";
 import { Device } from "react-native-ble-plx";
+import { showTopToast } from "@/utils";
 
 export default function PIXResponse() {
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const store = useStore();
-  const {
-    requestPermissions,
-    scanForPeripherals,
-    allDevices,
-    connectToDevice,
-    connectedDevice,
-    disconnectFromDevice,
-    send,
-  } = useBLE();
-  const [flag, setFLag] = useState<boolean>(false);
   const [change, setChange] = useState<number>(0);
-
-  const scanForDevices = React.useCallback(async () => {
-    const isPermissionsEnabled = await requestPermissions();
-    if (isPermissionsEnabled) {
-      scanForPeripherals();
-    }
-  }, []);
-
-  const connectBluetooth = React.useCallback(() => {
-    if (
-      !connectedDevice ||
-      (!connectedDevice.name?.includes("Parasunflower") && !flag)
-    ) {
-      setFLag(false);
-      scanForDevices();
-      allDevices.forEach((device) => {
-        if (device.name?.includes("Parasunflower")) {
-          connectToDevice(device);
-          setFLag(true);
-        }
-      });
-    }
-  }, [change]);
 
   React.useEffect(() => {
     const getPaymentResponse = async () => {
@@ -59,13 +27,10 @@ export default function PIXResponse() {
         );
         const json = await response.json();
         if (json.payment_status === "approved") {
+          showTopToast("Pagamento recebido!", ToastAndroid.SHORT);
           console.log(json.expiration_date);
           store.setEndTime(new Date(json.expiration_date));
-          // console.log(connectedDevice?.id);
-          // if (connectedDevice) {
-          //   send(connectedDevice, json.expiration_date);
-          //   handlePress();
-          // }
+          store.setIsRent(true);
           handlePress();
         } else if (json.payment_status === "cancelled") {
           navigation.navigate("PIX Request");

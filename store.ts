@@ -8,10 +8,8 @@ interface AppState {
   pixCode: string;
   rentalid: any;
   endTime: Date;
-  isRunning: boolean;
-  returnToPaymentResponse: boolean;
-  setReturnToPaymentResponse: (returnToPaymentResponse: boolean) => void;
-  setIsRunning: (isRunning: boolean) => void;
+  isRent: boolean;
+  setIsRent: (isRent: boolean) => void;
   setEndTime: (time: Date) => void;
   setRentalid: (id: any) => void;
   setPixCode: (code: string) => void;
@@ -25,6 +23,7 @@ interface AppState {
 }
 
 const useStore = create<AppState>((set) => ({
+  isRent: false,
   totalTime: 0,
   totalPrice: 0.0,
   rate: 0.25,
@@ -33,10 +32,7 @@ const useStore = create<AppState>((set) => ({
   rentalid: null,
   endTime: new Date(),
   isRunning: false,
-  returnToPaymentResponse: false,
-  setReturnToPaymentResponse: (returnToPaymentResponse) =>
-    set({ returnToPaymentResponse: returnToPaymentResponse }),
-  setIsRunning: (isRunning) => set({ isRunning: isRunning }),
+  setIsRent: (isRent) => set({ isRent: isRent }),
   setEndTime: (time) => set({ endTime: time }),
   setRentalid: (id) => set({ rentalid: id }),
   setPixCode: (code) => set({ pixCode: code }),
