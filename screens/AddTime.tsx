@@ -17,29 +17,12 @@ export default function AddTime() {
   };
 
   const pricePerMin = store.rate;
-  const minuteTime = 60;
+  const currentTime = store.totalSeconds;
 
-  const handle10minPress = () => {
-    store.setTime(10);
-    store.setPrice(10 * pricePerMin);
-    goToPayment();
-  };
-
-  const handle30minPress = () => {
-    store.setTime(30);
-    store.setPrice(30 * pricePerMin);
-    goToPayment();
-  };
-
-  const handle45minPress = () => {
-    store.setTime(45);
-    store.setPrice(45 * pricePerMin);
-    goToPayment();
-  };
-
-  const handle1hourPress = () => {
-    store.setTime(60);
-    store.setPrice(60 * pricePerMin);
+  const handleTimePress = (minutes: number) => {
+    store.setTime(minutes);
+    store.setTotalSeconds(currentTime + minutes * 60);
+    store.setPrice(minutes * pricePerMin);
     goToPayment();
   };
 
@@ -48,19 +31,19 @@ export default function AddTime() {
       <Text style={styles.title}>Selecione o tempo a mais desejado</Text>
       <View style={styles.buttonsBottomSpacing}>
         <Button
-          onPress={handle10minPress}
+          onPress={() => handleTimePress(10)}
           title={`10 min - ${formatPricePerMinute(pricePerMin, 10)}`}
         ></Button>
         <Button
-          onPress={handle30minPress}
+          onPress={() => handleTimePress(30)}
           title={`30 min - ${formatPricePerMinute(pricePerMin, 30)}`}
         ></Button>
         <Button
-          onPress={handle45minPress}
+          onPress={() => handleTimePress(45)}
           title={`45 min - ${formatPricePerMinute(pricePerMin, 45)}`}
         ></Button>
         <Button
-          onPress={handle1hourPress}
+          onPress={() => handleTimePress(60)}
           title={`1 hora - ${formatPricePerMinute(pricePerMin, 60)}`}
         ></Button>
       </View>

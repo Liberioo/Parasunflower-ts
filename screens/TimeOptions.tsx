@@ -23,6 +23,7 @@ const TimeOptions: React.FC<TimeOptionsProps> = () => {
 
   const handleTimePress = (minutes: number) => {
     store.setTime(minutes);
+    store.setTotalSeconds(minutes * 60);
     store.setPrice(minutes * pricePerMin);
     goToNextPage();
   };

@@ -48,7 +48,8 @@
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
     "zustand": "^4.5.2",
-    "eas-cli": "9.2.0"
+    "eas-cli": "9.2.0",
+    "expo-notifications": "~0.28.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

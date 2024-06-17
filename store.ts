@@ -9,6 +9,8 @@ interface AppState {
   rentalid: any;
   endTime: Date;
   isRent: boolean;
+  totalSeconds: number;
+  setTotalSeconds: (seconds: number) => void;
   setIsRent: (isRent: boolean) => void;
   setEndTime: (time: Date) => void;
   setRentalid: (id: any) => void;
@@ -30,8 +32,10 @@ const useStore = create<AppState>((set) => ({
   QRCodeData: "",
   pixCode: "",
   rentalid: null,
+  totalSeconds: 0,
   endTime: new Date(),
   isRunning: false,
+  setTotalSeconds: (seconds) => set({ totalSeconds: seconds }),
   setIsRent: (isRent) => set({ isRent: isRent }),
   setEndTime: (time) => set({ endTime: time }),
   setRentalid: (id) => set({ rentalid: id }),

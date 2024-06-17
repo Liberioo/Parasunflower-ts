@@ -59,7 +59,7 @@ const TimeRemainingAndControls: React.FC<
   }, [change]);
 
   const store = useStore();
-  const seconds = store.totalTime * 60;
+  const seconds = store.totalSeconds;
 
   const handleButton1Press = () => {
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
@@ -129,6 +129,7 @@ const TimeRemainingAndControls: React.FC<
         setChange(change + 1);
       }
     }
+    store.setTotalSeconds(sec);
   };
 
   const connectionText = () => {
@@ -250,6 +251,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+  } as TextStyle,
+  btwarning: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "yellow",
   } as TextStyle,
 });
 
