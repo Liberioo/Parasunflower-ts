@@ -35,6 +35,10 @@ const TimeRemainingAndControls: React.FC<
   const [option, setOption] = useState(0); // 0 - auto, 1 - manual
   const [flag, setFLag] = useState<boolean>(false);
   const [change, setChange] = useState<number>(0);
+  const [btn1, setBtn1] = useState<boolean>(true);
+  const [btn2, setBtn2] = useState<boolean>(true);
+  const [btn3, setBtn3] = useState<boolean>(true);
+  const [btn4, setBtn4] = useState<boolean>(true);
 
   useEffect(() => {
     const scanForDevices = async () => {
@@ -54,6 +58,12 @@ const TimeRemainingAndControls: React.FC<
           connectToDevice(device, ["rent"]);
           setFLag(true);
         }
+        if (!flag) {
+          showTopToast(
+            "Nenhum dispositivo Parasunflower foi detectado nas proximidades!",
+            ToastAndroid.LONG
+          );
+        }
       });
     }
   }, [change]);
@@ -61,40 +71,48 @@ const TimeRemainingAndControls: React.FC<
   const store = useStore();
   const seconds = store.totalSeconds;
 
-  const handleButton1Press = () => {
+  const handleButton1Press = async () => {
+    setBtn1(false);
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "up");
     } else {
       setFLag(false);
       setChange(change + 1);
     }
+    setTimeout(() => setBtn1(true), 1500);
   };
 
-  const handleButton2Press = () => {
+  const handleButton2Press = async () => {
+    setBtn2(false);
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "left");
     } else {
       setFLag(false);
       setChange(change + 1);
     }
+    setTimeout(() => setBtn2(true), 1500);
   };
 
-  const handleButton3Press = () => {
+  const handleButton3Press = async () => {
+    setBtn3(false);
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "right");
     } else {
       setFLag(false);
       setChange(change + 1);
     }
+    setTimeout(() => setBtn3(true), 1500);
   };
 
-  const handleButton4Press = () => {
+  const handleButton4Press = async () => {
+    setBtn4(false);
     if (connectedDevice && connectedDevice.name?.includes("Parasunflower")) {
       send(connectedDevice, "down");
     } else {
       setFLag(false);
       setChange(change + 1);
     }
+    setTimeout(() => setBtn4(true), 1500);
   };
 
   const handleSwitchPress = () => {
@@ -136,7 +154,11 @@ const TimeRemainingAndControls: React.FC<
     if (isConnected()) {
       return <></>;
     } else {
-      return <Text>Por favor conecte-se ao bluetooth do Parasunflower</Text>;
+      return (
+        <Text style={styles.btwarning}>
+          Por favor conecte-se ao bluetooth do Parasunflower
+        </Text>
+      );
     }
   };
 
@@ -154,7 +176,7 @@ const TimeRemainingAndControls: React.FC<
             <Button
               onPress={handleButton1Press}
               title="Inclinar para cima"
-              disabled={!isConnected()}
+              disabled={!isConnected() && btn1}
             />
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -162,20 +184,20 @@ const TimeRemainingAndControls: React.FC<
               style={{ flex: 1 }}
               onPress={handleButton2Press}
               title="Rot. esquerda"
-              disabled={!isConnected()}
+              disabled={!isConnected() && btn2}
             />
             <Button
               style={{ flex: 1 }}
               onPress={handleButton3Press}
               title="Rot. direita"
-              disabled={!isConnected()}
+              disabled={!isConnected() && btn3}
             />
           </View>
           <View>
             <Button
               onPress={handleButton4Press}
               title="Inclinar para baixo"
-              disabled={!isConnected()}
+              disabled={!isConnected() && btn4}
             />
             <Button
               onPress={handleSwitchPress}
@@ -255,7 +277,7 @@ const styles = StyleSheet.create({
   btwarning: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "yellow",
+    color: "red",
   } as TextStyle,
 });
 
