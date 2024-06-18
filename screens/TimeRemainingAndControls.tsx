@@ -58,13 +58,13 @@ const TimeRemainingAndControls: React.FC<
           connectToDevice(device, ["rent"]);
           setFLag(true);
         }
-        if (!flag) {
-          showTopToast(
-            "Nenhum dispositivo Parasunflower foi detectado nas proximidades!",
-            ToastAndroid.LONG
-          );
-        }
       });
+      if (!flag) {
+        showTopToast(
+          "Nenhum dispositivo Parasunflower foi detectado nas proximidades!",
+          ToastAndroid.LONG
+        );
+      }
     }
   }, [change]);
 
@@ -79,7 +79,7 @@ const TimeRemainingAndControls: React.FC<
       setFLag(false);
       setChange(change + 1);
     }
-    setTimeout(() => setBtn1(true), 1500);
+    setTimeout(() => setBtn1(true), 2500);
   };
 
   const handleButton2Press = async () => {
@@ -112,7 +112,7 @@ const TimeRemainingAndControls: React.FC<
       setFLag(false);
       setChange(change + 1);
     }
-    setTimeout(() => setBtn4(true), 1500);
+    setTimeout(() => setBtn4(true), 2500);
   };
 
   const handleSwitchPress = () => {

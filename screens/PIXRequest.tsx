@@ -36,6 +36,7 @@ const PIXRequest: React.FC<PIXRequestProps> = () => {
       const [pixData, id] = [json.qr_code, json.rental_id];
       store.setPixCode(pixData);
       store.setRentalid(id);
+      setIsLoading(false);
       navigation.navigate("PIX Response");
     } catch (error) {
       showTopToast("Parece que ocorreu um erro!", ToastAndroid.SHORT);

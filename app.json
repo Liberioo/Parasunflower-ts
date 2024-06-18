@@ -34,7 +34,7 @@
         "android.permissions.ACCESS_COARSE_LOCATION",
         "android.permissions.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.liberio.Parasunflower"
+      "package": "com.liberioo.Parasunflower"
     },
     "web": {
       "bundler": "metro",
@@ -61,7 +61,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "d377a6cf-120c-45e7-9a05-ee0187172459"
+        "projectId": "3c101a1b-dceb-451c-b150-5404599dc50f"
       }
     }
   }
