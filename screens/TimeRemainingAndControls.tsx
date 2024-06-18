@@ -276,6 +276,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   btwarning: {
     fontSize: 16,
+    textAlign: "center",
     fontWeight: "bold",
     color: "red",
   } as TextStyle,
