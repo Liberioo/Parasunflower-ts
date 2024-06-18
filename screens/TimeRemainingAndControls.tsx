@@ -176,7 +176,7 @@ const TimeRemainingAndControls: React.FC<
             <Button
               onPress={handleButton1Press}
               title="Inclinar para cima"
-              disabled={!isConnected() && btn1}
+              disabled={(!isConnected() && !btn1) || !btn1}
             />
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -184,20 +184,20 @@ const TimeRemainingAndControls: React.FC<
               style={{ flex: 1 }}
               onPress={handleButton2Press}
               title="Rot. esquerda"
-              disabled={!isConnected() && btn2}
+              disabled={(!isConnected() && !btn2) || !btn2}
             />
             <Button
               style={{ flex: 1 }}
               onPress={handleButton3Press}
               title="Rot. direita"
-              disabled={!isConnected() && btn3}
+              disabled={(!isConnected() && !btn3) || !btn3}
             />
           </View>
           <View>
             <Button
               onPress={handleButton4Press}
               title="Inclinar para baixo"
-              disabled={!isConnected() && btn4}
+              disabled={(!isConnected() && !btn4) || !btn4}
             />
             <Button
               onPress={handleSwitchPress}
