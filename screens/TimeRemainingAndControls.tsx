@@ -59,12 +59,12 @@ const TimeRemainingAndControls: React.FC<
           setFLag(true);
         }
       });
-      if (!flag) {
-        showTopToast(
-          "Nenhum dispositivo Parasunflower foi detectado nas proximidades!",
-          ToastAndroid.LONG
-        );
-      }
+      // if (!flag) {
+      //   showTopToast(
+      //     "Nenhum dispositivo Parasunflower foi detectado nas proximidades!",
+      //     ToastAndroid.LONG
+      //   );
+      // }
     }
   }, [change]);
 
@@ -130,7 +130,7 @@ const TimeRemainingAndControls: React.FC<
   };
 
   const handleEndTime = (sec: number) => {
-    if (sec === 3000) {
+    if (sec === 300) {
       showTopToast(
         "Apenas 5 minutos restantes!\nLembrando que você sempre pode adicionar mais tempo!",
         ToastAndroid.LONG

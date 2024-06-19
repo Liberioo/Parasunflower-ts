@@ -52,6 +52,11 @@ const PIXRequest: React.FC<PIXRequestProps> = () => {
       </Text>
       <Button onPress={handlePress} title="Gerar PIX copia e cola" />
       {isLoading && <ActivityIndicator color={"black"} />}
+      <Button
+        title={"Ir para controles"}
+        onPress={() => navigation.navigate("Tempo restante e controles")}
+        hidden={!store.isRent}
+      />
     </View>
   );
 };

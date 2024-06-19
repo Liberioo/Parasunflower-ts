@@ -6,10 +6,12 @@ import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import useStore from "@/store";
 
 interface MapaProps {}
 
 const Mapa: React.FC<MapaProps> = () => {
+  const store = useStore();
   const navigation =
     useNavigation<StackNavigationProp<RootStackNavigatorParamsList>>();
   const [location, setLocation] = useState<string | null>(null);
@@ -92,6 +94,11 @@ const Mapa: React.FC<MapaProps> = () => {
       <Button
         onPress={() => navigation.navigate("Ler QR Code")}
         title="Ler QR Code"
+      />
+      <Button
+        title={"Ir para controles"}
+        onPress={() => navigation.navigate("Tempo restante e controles")}
+        hidden={!store.isRent}
       />
     </View>
   );

@@ -48,6 +48,11 @@ const TimeOptions: React.FC<TimeOptionsProps> = () => {
           onPress={() => handleTimePress(60)}
           title={`1 hora - ${formatPricePerMinute(pricePerMin, 60)}`}
         />
+        <Button
+          title={"Ir para controles"}
+          onPress={() => navigation.navigate("Tempo restante e controles")}
+          hidden={!store.isRent}
+        />
       </View>
     </View>
   );

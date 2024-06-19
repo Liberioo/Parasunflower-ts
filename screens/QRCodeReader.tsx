@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+import { StyleSheet, Text, View, ViewStyle, TextStyle } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
 import useStore from "../store";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackNavigatorParamsList } from "@/app";
+import Button from "@/components/Button";
 
 interface QRCodeReaderProps {}
 
@@ -77,6 +71,11 @@ const QRCodeReader: React.FC<QRCodeReaderProps> = () => {
         Escaneie o QR Code localizado no guarda-sol
       </Text>
       {renderCamera()}
+      <Button
+        title={"Ir para controles"}
+        onPress={() => navigation.navigate("Tempo restante e controles")}
+        hidden={!store.isRent}
+      />
     </View>
   );
 };

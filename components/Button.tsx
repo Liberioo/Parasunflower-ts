@@ -12,6 +12,7 @@ interface ButtonProps {
   title: string | null;
   style?: ViewStyle;
   disabled?: boolean;
+  hidden?: boolean; // New prop to control visibility
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -19,7 +20,12 @@ const Button: React.FC<ButtonProps> = ({
   title,
   style,
   disabled = false,
+  hidden = false, // Default value for the new prop
 }) => {
+  if (hidden) {
+    return null; // Do not render the button if hidden is true
+  }
+
   return (
     <TouchableOpacity
       onPress={disabled ? undefined : onPress}

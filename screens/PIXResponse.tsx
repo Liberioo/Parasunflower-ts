@@ -19,6 +19,9 @@ export default function PIXResponse() {
   const [change, setChange] = useState<number>(0);
 
   React.useEffect(() => {
+    if (store.isRent) {
+      navigation.navigate("Tempo restante e controles");
+    }
     const getPaymentResponse = async () => {
       try {
         // console.log(store.rentalid);
@@ -56,7 +59,7 @@ export default function PIXResponse() {
 
   const handleEndTime = (newSeconds: number) => {
     setChange(change + 1);
-    if (newSeconds === 0) {
+    if (newSeconds === 0 && store.isRent) {
       navigation.navigate("PIX Request");
     }
   };
